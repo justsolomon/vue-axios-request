@@ -5,7 +5,8 @@ const axiosInstance = axios.create({
   cancelToken: source.token,
 });
 function useNetworkRequest(url, initialData, config, errorHandler) {
-  let { data, loading, error } = initialData;
+  let { data } = initialData;
+  const { loading, error } = initialData;
   let initialDataValue = null;
   if (typeof data !== "string") {
     const { key, value } = data;
@@ -44,4 +45,3 @@ function useNetworkRequest(url, initialData, config, errorHandler) {
   return { resetData, cancelRequest, dispatchRequest };
 }
 export default useNetworkRequest;
-//# sourceMappingURL=useNetworkRequest.js.map

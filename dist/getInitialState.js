@@ -18,4 +18,3 @@ const getInitialState = (data, loading, error, isRequest) => {
   return initialState;
 };
 export default getInitialState;
-//# sourceMappingURL=getInitialState.js.map

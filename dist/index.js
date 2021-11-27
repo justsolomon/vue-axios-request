@@ -1,2 +1,2 @@
 export { default } from "./useNetworkRequest";
-//# sourceMappingURL=index.js.map
+export { default as getInitialState } from "./getInitialState";
