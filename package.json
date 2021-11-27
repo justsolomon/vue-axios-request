@@ -8,12 +8,12 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "rimraf ./dist && tsc",
+    "build": "rimraf ./dist && npx tsc",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "format": "prettier --config .prettierrc src --write"
   },
-  "prepublish": "tsc",
+  "prepublish": "npx tsc",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/justsolomon/vue-axios-request.git"
