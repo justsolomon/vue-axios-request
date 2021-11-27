@@ -1,14 +1,40 @@
 {
   "name": "vue-axios-request",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "author": "Gbolahan Balogun",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "tsc",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "format": "prettier --config .prettierrc src --write"
   },
+  "prepublish": "tsc",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justsolomon/vue-axios-request.git"
+  },
+  "keywords": [
+    "axios",
+    "vue",
+    "vue3",
+    "vuex",
+    "request",
+    "http",
+    "vue-request",
+    "vue-axios-request",
+    "vue request",
+    "vue axios request"
+  ],
+  "files": [
+    "dist/*"
+  ],
+  "license": "MIT",
   "dependencies": {
+    "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vuex": "^3.4.0"
@@ -39,6 +65,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [
+      "yarn format",
       "vue-cli-service lint",
       "git add"
     ]
