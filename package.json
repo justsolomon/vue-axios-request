@@ -1,6 +1,6 @@
 {
   "name": "vue-axios-request",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "A Vue library for making network requests using Axios",
   "private": false,
   "author": "Gbolahan Balogun",
@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "tsc",
+    "build": "rimraf ./dist && tsc",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "format": "prettier --config .prettierrc src --write"
@@ -34,6 +34,10 @@
     "dist/*"
   ],
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/justsolomon/vue-axios-request/issues"
+  },
+  "homepage": "https://github.com/justsolomon/vue-axios-request#readme",
   "dependencies": {
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
@@ -67,6 +71,7 @@
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [
       "yarn format",
+      "yarn build",
       "vue-cli-service lint",
       "git add"
     ]

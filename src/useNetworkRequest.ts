@@ -54,7 +54,11 @@ function useNetworkRequest<RequestDataType>(
     const requestConfig = {
       url,
       ...config,
-      data: config?.data ? Object.assign(config?.data, body) : body,
+      data: config
+        ? config.data
+          ? Object.assign(config.data, body)
+          : body
+        : body,
       params,
     };
 
