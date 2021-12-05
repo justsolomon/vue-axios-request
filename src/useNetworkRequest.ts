@@ -20,7 +20,7 @@ function useNetworkRequest<RequestDataType>(
   config?: AxiosRequestConfig,
   errorHandler?: (error: AxiosError) => void,
 ): NetworkRequestType<RequestDataType> {
-  let initialData: InitialStateKeys = store.getters.getValue(
+  let initialData: InitialStateKeys = store.getters.getStoreItem(
     this.$options.name || this.$options._componentTag,
   );
 
