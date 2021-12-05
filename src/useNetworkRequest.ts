@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import store from "./store";
 import {
   InitialResponseData,
   InitialStateKeys,
@@ -15,10 +16,22 @@ const axiosInstance = axios.create({
 function useNetworkRequest<RequestDataType>(
   this: Record<string, any>,
   url: string,
-  initialData: InitialStateKeys,
-  config: AxiosRequestConfig,
-  errorHandler: (error: AxiosError) => void,
+  storeMutation?: string,
+  config?: AxiosRequestConfig,
+  errorHandler?: (error: AxiosError) => void,
 ): NetworkRequestType<RequestDataType> {
+  let initialData: InitialStateKeys = store.getters.getValue(
+    this.$options.name || this.$options._componentTag,
+  );
+
+  if (!initialData) {
+    initialData = {
+      data: "data",
+      loading: "loading",
+      error: "error",
+    };
+  }
+
   let { data } = initialData;
   const { loading, error } = initialData;
 
@@ -31,16 +44,16 @@ function useNetworkRequest<RequestDataType>(
     initialDataValue = value;
   }
 
-  function reset(this: Record<string, any>) {
+  function resetData(this: Record<string, any>) {
     this[data as string] = initialDataValue;
     this[loading] = false;
 
     if (error) this[error] = null;
   }
 
-  const resetData = reset.bind(this);
+  const reset = resetData.bind(this);
 
-  function cancelRequest() {
+  function cancel() {
     source.cancel("Request cancelled.");
   }
 
@@ -64,19 +77,24 @@ function useNetworkRequest<RequestDataType>(
 
     axiosInstance(requestConfig)
       .then((response: AxiosResponse) => {
-        resetData();
+        reset();
+
         this[data as string] = response.data;
+        if (storeMutation && this.$store) {
+          this.$store.commit(storeMutation, response.data);
+        }
       })
       .catch((axiosError: AxiosError) => {
-        resetData();
+        reset();
+
         if (errorHandler) errorHandler(axiosError);
         else this[error as string] = axiosError;
       });
   }
 
-  const dispatchRequest = axiosRequest.bind(this);
+  const dispatch = axiosRequest.bind(this);
 
-  return { resetData, cancelRequest, dispatchRequest };
+  return { reset, cancel, dispatch };
 }
 
 export default useNetworkRequest;
