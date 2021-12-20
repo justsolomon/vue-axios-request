@@ -1,11 +1,8 @@
+import { AxiosError, AxiosRequestConfig } from "axios";
 export interface InitialResponseData {
   /** Key of the request data */
   key: string;
   /** Default value of the request data */
-  value: any;
-}
-export interface StoreMutationPayload {
-  key: string;
   value: any;
 }
 export declare type RootState = Record<string, any>;
@@ -21,6 +18,14 @@ export interface InitialStateKeys {
   /** Key used to represent the request error */
   error?: string;
 }
+export interface NetworkRequestOptions {
+  /** Mutation for committing the request data to the store */
+  storeMutation?: string;
+  /** Axios request config object */
+  config?: AxiosRequestConfig;
+  /** Custom error handler for Axios errors */
+  errorHandler?: (error: AxiosError) => void;
+}
 export interface NetworkRequestType<RequestDataType> {
   /** Resets the initial network state's values to the default values */
   reset: () => void;
@@ -28,8 +33,8 @@ export interface NetworkRequestType<RequestDataType> {
   cancel: () => void;
   /** Dispatches the network request using Axios
    *
-   * @param body the request's body
-   * @param params the request's query params
+   * @param body the request body
+   * @param params the request query params
    * @example
    * ```js
    * //An example GET request

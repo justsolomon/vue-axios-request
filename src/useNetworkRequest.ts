@@ -1,8 +1,8 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import store from "./store";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   InitialResponseData,
   InitialStateKeys,
+  NetworkRequestOptions,
   NetworkRequestType,
 } from "./types";
 
@@ -16,22 +16,9 @@ const axiosInstance = axios.create({
 function useNetworkRequest<RequestDataType>(
   this: Record<string, any>,
   url: string,
-  storeMutation?: string,
-  config?: AxiosRequestConfig,
-  errorHandler?: (error: AxiosError) => void,
+  initialData: InitialStateKeys,
+  options: NetworkRequestOptions,
 ): NetworkRequestType<RequestDataType> {
-  let initialData: InitialStateKeys = store.getters.getStoreItem(
-    this.$options.name || this.$options._componentTag,
-  );
-
-  if (!initialData) {
-    initialData = {
-      data: "data",
-      loading: "loading",
-      error: "error",
-    };
-  }
-
   let { data } = initialData;
   const { loading, error } = initialData;
 
@@ -62,6 +49,7 @@ function useNetworkRequest<RequestDataType>(
     body?: RequestDataType,
     params?: RequestDataType,
   ) {
+    const { storeMutation, config, errorHandler } = options;
     this[loading] = true;
 
     const requestConfig = {
@@ -87,8 +75,8 @@ function useNetworkRequest<RequestDataType>(
       .catch((axiosError: AxiosError) => {
         reset();
 
+        if (error) this[error as string] = axiosError;
         if (errorHandler) errorHandler(axiosError);
-        else this[error as string] = axiosError;
       });
   }
 

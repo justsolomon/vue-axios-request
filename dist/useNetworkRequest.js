@@ -1,21 +1,10 @@
 import axios from "axios";
-import store from "./store";
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
 const axiosInstance = axios.create({
   cancelToken: source.token,
 });
-function useNetworkRequest(url, storeMutation, config, errorHandler) {
-  let initialData = store.getters.getStoreItem(
-    this.$options.name || this.$options._componentTag,
-  );
-  if (!initialData) {
-    initialData = {
-      data: "data",
-      loading: "loading",
-      error: "error",
-    };
-  }
+function useNetworkRequest(url, initialData, options) {
   let { data } = initialData;
   const { loading, error } = initialData;
   let initialDataValue = null;
@@ -34,6 +23,7 @@ function useNetworkRequest(url, storeMutation, config, errorHandler) {
     source.cancel("Request cancelled.");
   }
   function axiosRequest(body, params) {
+    const { storeMutation, config, errorHandler } = options;
     this[loading] = true;
     const requestConfig = {
       url,
@@ -55,8 +45,8 @@ function useNetworkRequest(url, storeMutation, config, errorHandler) {
       })
       .catch((axiosError) => {
         reset();
+        if (error) this[error] = axiosError;
         if (errorHandler) errorHandler(axiosError);
-        else this[error] = axiosError;
       });
   }
   const dispatch = axiosRequest.bind(this);

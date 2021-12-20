@@ -1,27 +1,28 @@
 import { InitialResponseData, InitialState, InitialStateKeys } from "../types";
-import store from "@/store";
 
 function getInitialState<ResponseDataType>(
-  this: Record<string, any>,
   data: string | InitialResponseData,
   loading: string,
   error: string,
+  isRequest: boolean,
 ): InitialState<ResponseDataType> | InitialStateKeys {
-  const initialState = {
-    ...(typeof data === "string"
-      ? { [data]: null }
-      : { [data.key]: data.value }),
-    ...(error ? { [error]: null } : {}),
-    [loading]: false,
-  };
+  let initialState;
 
-  store.commit("addStoreItem", {
-    [this.$options.name || this.$options._componentTag]: {
+  if (!isRequest) {
+    initialState = {
+      ...(typeof data === "string"
+        ? { [data]: null }
+        : { [data.key]: data.value }),
+      ...(error ? { [error]: null } : {}),
+      [loading]: false,
+    };
+  } else {
+    initialState = {
       data,
       loading,
       ...(error ? { error } : {}),
-    },
-  });
+    };
+  }
 
   return initialState;
 }
