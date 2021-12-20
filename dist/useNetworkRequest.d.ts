@@ -6,7 +6,7 @@ import {
 declare function useNetworkRequest<RequestDataType>(
   this: Record<string, any>,
   url: string,
-  initialData: InitialStateKeys,
+  initialStateKeys: InitialStateKeys,
   options: NetworkRequestOptions,
 ): NetworkRequestType<RequestDataType>;
 export default useNetworkRequest;

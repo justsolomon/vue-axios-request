@@ -16,11 +16,11 @@ const axiosInstance = axios.create({
 function useNetworkRequest<RequestDataType>(
   this: Record<string, any>,
   url: string,
-  initialData: InitialStateKeys,
+  initialStateKeys: InitialStateKeys,
   options: NetworkRequestOptions,
 ): NetworkRequestType<RequestDataType> {
-  let { data } = initialData;
-  const { loading, error } = initialData;
+  let { data } = initialStateKeys;
+  const { loading, error } = initialStateKeys;
 
   let initialDataValue: null | string = null;
 

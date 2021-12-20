@@ -4,9 +4,9 @@ const source = CancelToken.source();
 const axiosInstance = axios.create({
   cancelToken: source.token,
 });
-function useNetworkRequest(url, initialData, options) {
-  let { data } = initialData;
-  const { loading, error } = initialData;
+function useNetworkRequest(url, initialStateKeys, options) {
+  let { data } = initialStateKeys;
+  const { loading, error } = initialStateKeys;
   let initialDataValue = null;
   if (typeof data !== "string") {
     const { key, value } = data;
