@@ -99,11 +99,6 @@ export default {
       ...this.getInitialState(...stateKeys),
     };
   },
-  computed: {
-    storeUsers() {
-      return this.$store.getters.getUsers;
-    },
-  },
   methods: {
     fetchUsers() {
       const { dispatch } = this.useNetworkRequest(
