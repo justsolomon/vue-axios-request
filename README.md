@@ -61,9 +61,7 @@ When defining the method for `useNetworkRequest`, the imported function needs to
 The `useNetworkRequest` function takes in three parameters, namely:
 
 1. `url`, the endpoint for the network request,
-
 2. `initialStateKeys`, an object containing the keys for the network request's state (i.e `data`, `loading`, `error`), and
-
 3. `options`, an object which can contain any of the below three properties:
 
    - `storeMutation`, the mutation for committing the request data to the store.
