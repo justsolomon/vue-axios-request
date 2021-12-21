@@ -1,10 +1,12 @@
-import { AxiosError, AxiosRequestConfig } from "axios";
-import { InitialStateKeys, NetworkRequestType } from "./types";
+import {
+  InitialStateKeys,
+  NetworkRequestOptions,
+  NetworkRequestType,
+} from "./types";
 declare function useNetworkRequest<RequestDataType>(
   this: Record<string, any>,
   url: string,
-  initialData: InitialStateKeys,
-  config: AxiosRequestConfig,
-  errorHandler: (error: AxiosError) => void,
+  initialStateKeys: InitialStateKeys,
+  options: NetworkRequestOptions,
 ): NetworkRequestType<RequestDataType>;
 export default useNetworkRequest;

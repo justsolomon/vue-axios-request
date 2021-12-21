@@ -1,4 +1,4 @@
-const getInitialState = (data, loading, error, isRequest) => {
+function getInitialState(data, loading, error, isRequest) {
   let initialState;
   if (!isRequest) {
     initialState = {
@@ -16,5 +16,5 @@ const getInitialState = (data, loading, error, isRequest) => {
     };
   }
   return initialState;
-};
+}
 export default getInitialState;

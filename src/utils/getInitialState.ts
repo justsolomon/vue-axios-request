@@ -1,11 +1,11 @@
-import { InitialResponseData, InitialState, InitialStateKeys } from "./types";
+import { InitialResponseData, InitialState, InitialStateKeys } from "../types";
 
-const getInitialState = <ResponseDataType>(
+function getInitialState<ResponseDataType>(
   data: string | InitialResponseData,
   loading: string,
   error: string,
   isRequest: boolean,
-): InitialState<ResponseDataType> | InitialStateKeys => {
+): InitialState<ResponseDataType> | InitialStateKeys {
   let initialState;
 
   if (!isRequest) {
@@ -25,6 +25,6 @@ const getInitialState = <ResponseDataType>(
   }
 
   return initialState;
-};
+}
 
 export default getInitialState;
