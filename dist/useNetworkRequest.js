@@ -13,8 +13,12 @@ function useNetworkRequest(url, initialStateKeys, options) {
     data = key;
     initialDataValue = value;
   }
+  const { storeMutation } = options;
   function resetData() {
     this[data] = initialDataValue;
+    if (storeMutation && this.$store) {
+      this.$store.commit(storeMutation, initialDataValue);
+    }
     this[loading] = false;
     if (error) this[error] = null;
   }
@@ -23,7 +27,7 @@ function useNetworkRequest(url, initialStateKeys, options) {
     source.cancel("Request cancelled.");
   }
   function axiosRequest(body, params) {
-    const { storeMutation, config, errorHandler } = options;
+    const { config, errorHandler } = options;
     this[loading] = true;
     const requestConfig = {
       url,
