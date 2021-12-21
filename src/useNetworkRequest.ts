@@ -31,8 +31,13 @@ function useNetworkRequest<RequestDataType>(
     initialDataValue = value;
   }
 
+  const { storeMutation } = options;
   function resetData(this: Record<string, any>) {
     this[data as string] = initialDataValue;
+    if (storeMutation && this.$store) {
+      this.$store.commit(storeMutation, initialDataValue);
+    }
+
     this[loading] = false;
 
     if (error) this[error] = null;
@@ -49,7 +54,7 @@ function useNetworkRequest<RequestDataType>(
     body?: RequestDataType,
     params?: RequestDataType,
   ) {
-    const { storeMutation, config, errorHandler } = options;
+    const { config, errorHandler } = options;
     this[loading] = true;
 
     const requestConfig = {
