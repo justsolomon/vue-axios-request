@@ -61,11 +61,14 @@ When defining the method for `useNetworkRequest`, the imported function needs to
 The `useNetworkRequest` function takes in three parameters, namely:
 
 1. `url`, the endpoint for the network request,
+
 2. `initialStateKeys`, an object containing the keys for the network request's state (i.e `data`, `loading`, `error`), and
+
 3. `options`, an object which can contain any of the below three properties:
-   1. `storeMutation`, the mutation for committing the request data to the store,
-   2. `config`, the Axios request config object, and
-   3. `errorHandler`, a custom function for handling Axios errors.
+
+   - `storeMutation`, the mutation for committing the request data to the store.
+   - `config`, the Axios request config object.
+   - `errorHandler`, a custom function for handling Axios errors.
 
 When the function is called, it returns three methods:
 
@@ -135,7 +138,7 @@ In the `fetchUsers` method, the global `useNetworkRequest` method is called, wit
 
 ### With Vuex
 
-To dispatch the network request's data to your VueX store, simply pass in the mutation from the `options` param to the `useNetworkRequest` method in your component. Using the example above, the `fetchUsers` method would be updated to:
+To dispatch the network request's data to your VueX store, simply pass in the mutation from the `options` param to the `useNetworkRequest` method in your component. Using the [example above](#in-components), the `fetchUsers` method would be updated to:
 
 ```js
 fetchUsers() {
