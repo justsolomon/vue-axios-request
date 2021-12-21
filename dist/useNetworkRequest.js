@@ -4,7 +4,7 @@ const source = CancelToken.source();
 const axiosInstance = axios.create({
   cancelToken: source.token,
 });
-function useNetworkRequest(url, initialStateKeys, options) {
+function useNetworkRequest(url, initialStateKeys, options, method) {
   let { data } = initialStateKeys;
   const { loading, error } = initialStateKeys;
   let initialDataValue = null;
@@ -22,53 +22,55 @@ function useNetworkRequest(url, initialStateKeys, options) {
   function cancel() {
     source.cancel("Request cancelled.");
   }
-  function axiosRequestHandler(method) {
-    return function axiosRequest(body, params) {
-      const { storeMutation, config, errorHandler } = options;
-      this[loading] = true;
-      const requestConfig = {
-        url,
-        ...config,
-        method,
-        data: config
-          ? config.data
-            ? Object.assign(config.data, body)
-            : body
-          : body,
-        params,
-      };
-      axiosInstance(requestConfig)
-        .then((response) => {
-          reset();
-          this[data] = response.data;
-          if (storeMutation && this.$store) {
-            this.$store.commit(storeMutation, response.data);
-          }
-        })
-        .catch((axiosError) => {
-          reset();
-          if (error) this[error] = axiosError;
-          if (errorHandler) errorHandler(axiosError);
-        });
+  function axiosRequest(body, params) {
+    const { storeMutation, config, errorHandler } = options;
+    this[loading] = true;
+    const requestConfig = {
+      url,
+      ...config,
+      method,
+      data: config
+        ? config.data
+          ? Object.assign(config.data, body)
+          : body
+        : body,
+      params,
     };
+    axiosInstance(requestConfig)
+      .then((response) => {
+        reset();
+        this[data] = response.data;
+        if (storeMutation && this.$store) {
+          this.$store.commit(storeMutation, response.data);
+        }
+      })
+      .catch((axiosError) => {
+        reset();
+        if (error) this[error] = axiosError;
+        if (errorHandler) errorHandler(axiosError);
+      });
   }
-  const defaultReturn = { reset, cancel };
+  const dispatch = axiosRequest.bind(this);
+  return { reset, cancel, dispatch };
+}
+function useNetworkRequestWrapper() {
+  const networkRequest = useNetworkRequest.bind(this);
   return {
-    get() {
-      return { ...defaultReturn, dispatch: axiosRequestHandler("GET") };
+    get(url, initialStateKeys, options) {
+      return networkRequest(url, initialStateKeys, options, "GET");
     },
-    post() {
-      return { ...defaultReturn, dispatch: axiosRequestHandler("POST") };
+    post(url, initialStateKeys, options) {
+      return networkRequest(url, initialStateKeys, options, "POST");
     },
-    patch() {
-      return { ...defaultReturn, dispatch: axiosRequestHandler("PATCH") };
+    patch(url, initialStateKeys, options) {
+      return networkRequest(url, initialStateKeys, options, "PATCH");
     },
-    put() {
-      return { ...defaultReturn, dispatch: axiosRequestHandler("PUT") };
+    put(url, initialStateKeys, options) {
+      return networkRequest(url, initialStateKeys, options, "PUT");
     },
-    delete() {
-      return { ...defaultReturn, dispatch: axiosRequestHandler("DELETE") };
+    delete(url, initialStateKeys, options) {
+      return networkRequest(url, initialStateKeys, options, "DELETE");
     },
   };
 }
-export default useNetworkRequest;
+export default useNetworkRequestWrapper;

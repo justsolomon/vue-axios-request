@@ -1,4 +1,4 @@
-import { AxiosError, AxiosRequestConfig } from "axios";
+import { AxiosError, AxiosRequestConfig, Method } from "axios";
 
 export interface InitialResponseData {
   /** Key of the request data */
@@ -66,10 +66,20 @@ export interface NetworkRequestType<RequestDataType> {
   dispatch: (body?: RequestDataType, params?: RequestDataType) => void;
 }
 
-export interface NetworkRequestWrapper<RequestDataType> {
-  get: () => NetworkRequestType<RequestDataType>;
-  post: () => NetworkRequestType<RequestDataType>;
-  put: () => NetworkRequestType<RequestDataType>;
-  patch: () => NetworkRequestType<RequestDataType>;
-  delete: () => NetworkRequestType<RequestDataType>;
-}
+export type NetworkRequest<RequestDataType> = (
+  url: string,
+  initialStateKeys: InitialStateKeys,
+  options: NetworkRequestOptions,
+  method: Method,
+) => NetworkRequestType<RequestDataType>;
+
+export type HTTPRequestMethod = "get" | "post" | "put" | "patch" | "delete";
+
+export type NetworkRequestWrapper<RequestDataType> = Record<
+  HTTPRequestMethod,
+  (
+    url: string,
+    initialStateKeys: InitialStateKeys,
+    options: NetworkRequestOptions,
+  ) => NetworkRequestType<RequestDataType>
+>;
