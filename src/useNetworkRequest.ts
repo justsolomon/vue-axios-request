@@ -1,9 +1,9 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse, Method } from "axios";
 import {
   InitialResponseData,
   InitialStateKeys,
   NetworkRequestOptions,
-  NetworkRequestType,
+  NetworkRequestWrapper,
 } from "./types";
 
 const CancelToken = axios.CancelToken;
@@ -18,7 +18,7 @@ function useNetworkRequest<RequestDataType>(
   url: string,
   initialStateKeys: InitialStateKeys,
   options: NetworkRequestOptions,
-): NetworkRequestType<RequestDataType> {
+): NetworkRequestWrapper<RequestDataType> {
   let { data } = initialStateKeys;
   const { loading, error } = initialStateKeys;
 
@@ -44,45 +44,63 @@ function useNetworkRequest<RequestDataType>(
     source.cancel("Request cancelled.");
   }
 
-  function axiosRequest(
-    this: Record<string, any>,
-    body?: RequestDataType,
-    params?: RequestDataType,
-  ) {
-    const { storeMutation, config, errorHandler } = options;
-    this[loading] = true;
+  function axiosRequestHandler(method: Method) {
+    return function axiosRequest(
+      this: Record<string, any>,
+      body?: RequestDataType,
+      params?: RequestDataType,
+    ) {
+      const { storeMutation, config, errorHandler } = options;
+      this[loading] = true;
 
-    const requestConfig = {
-      url,
-      ...config,
-      data: config
-        ? config.data
-          ? Object.assign(config.data, body)
-          : body
-        : body,
-      params,
+      const requestConfig = {
+        url,
+        ...config,
+        method,
+        data: config
+          ? config.data
+            ? Object.assign(config.data, body)
+            : body
+          : body,
+        params,
+      };
+
+      axiosInstance(requestConfig)
+        .then((response: AxiosResponse) => {
+          reset();
+
+          this[data as string] = response.data;
+          if (storeMutation && this.$store) {
+            this.$store.commit(storeMutation, response.data);
+          }
+        })
+        .catch((axiosError: AxiosError) => {
+          reset();
+
+          if (error) this[error as string] = axiosError;
+          if (errorHandler) errorHandler(axiosError);
+        });
     };
-
-    axiosInstance(requestConfig)
-      .then((response: AxiosResponse) => {
-        reset();
-
-        this[data as string] = response.data;
-        if (storeMutation && this.$store) {
-          this.$store.commit(storeMutation, response.data);
-        }
-      })
-      .catch((axiosError: AxiosError) => {
-        reset();
-
-        if (error) this[error as string] = axiosError;
-        if (errorHandler) errorHandler(axiosError);
-      });
   }
 
-  const dispatch = axiosRequest.bind(this);
-
-  return { reset, cancel, dispatch };
+  const defaultReturn = { reset, cancel };
+  return {
+    get() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("GET") };
+    },
+    post() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("POST") };
+    },
+    patch() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("PATCH") };
+    },
+    put() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("PUT") };
+    },
+    delete() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("DELETE") };
+    },
+  };
 }
 
 export default useNetworkRequest;

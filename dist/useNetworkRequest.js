@@ -22,34 +22,53 @@ function useNetworkRequest(url, initialStateKeys, options) {
   function cancel() {
     source.cancel("Request cancelled.");
   }
-  function axiosRequest(body, params) {
-    const { storeMutation, config, errorHandler } = options;
-    this[loading] = true;
-    const requestConfig = {
-      url,
-      ...config,
-      data: config
-        ? config.data
-          ? Object.assign(config.data, body)
-          : body
-        : body,
-      params,
+  function axiosRequestHandler(method) {
+    return function axiosRequest(body, params) {
+      const { storeMutation, config, errorHandler } = options;
+      this[loading] = true;
+      const requestConfig = {
+        url,
+        ...config,
+        method,
+        data: config
+          ? config.data
+            ? Object.assign(config.data, body)
+            : body
+          : body,
+        params,
+      };
+      axiosInstance(requestConfig)
+        .then((response) => {
+          reset();
+          this[data] = response.data;
+          if (storeMutation && this.$store) {
+            this.$store.commit(storeMutation, response.data);
+          }
+        })
+        .catch((axiosError) => {
+          reset();
+          if (error) this[error] = axiosError;
+          if (errorHandler) errorHandler(axiosError);
+        });
     };
-    axiosInstance(requestConfig)
-      .then((response) => {
-        reset();
-        this[data] = response.data;
-        if (storeMutation && this.$store) {
-          this.$store.commit(storeMutation, response.data);
-        }
-      })
-      .catch((axiosError) => {
-        reset();
-        if (error) this[error] = axiosError;
-        if (errorHandler) errorHandler(axiosError);
-      });
   }
-  const dispatch = axiosRequest.bind(this);
-  return { reset, cancel, dispatch };
+  const defaultReturn = { reset, cancel };
+  return {
+    get() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("GET") };
+    },
+    post() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("POST") };
+    },
+    patch() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("PATCH") };
+    },
+    put() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("PUT") };
+    },
+    delete() {
+      return { ...defaultReturn, dispatch: axiosRequestHandler("DELETE") };
+    },
+  };
 }
 export default useNetworkRequest;

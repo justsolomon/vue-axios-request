@@ -33,7 +33,10 @@ export interface NetworkRequestOptions {
   /** Axios request config object */
   config?: AxiosRequestConfig;
 
-  /** Custom error handler for Axios errors */
+  /** Custom error handler for Axios errors
+   *
+   * @param error axios error
+   */
   errorHandler?: (error: AxiosError) => void;
 }
 
@@ -61,4 +64,12 @@ export interface NetworkRequestType<RequestDataType> {
    * ```
    */
   dispatch: (body?: RequestDataType, params?: RequestDataType) => void;
+}
+
+export interface NetworkRequestWrapper<RequestDataType> {
+  get: () => NetworkRequestType<RequestDataType>;
+  post: () => NetworkRequestType<RequestDataType>;
+  put: () => NetworkRequestType<RequestDataType>;
+  patch: () => NetworkRequestType<RequestDataType>;
+  delete: () => NetworkRequestType<RequestDataType>;
 }

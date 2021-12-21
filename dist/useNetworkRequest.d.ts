@@ -1,12 +1,12 @@
 import {
   InitialStateKeys,
   NetworkRequestOptions,
-  NetworkRequestType,
+  NetworkRequestWrapper,
 } from "./types";
 declare function useNetworkRequest<RequestDataType>(
   this: Record<string, any>,
   url: string,
   initialStateKeys: InitialStateKeys,
   options: NetworkRequestOptions,
-): NetworkRequestType<RequestDataType>;
+): NetworkRequestWrapper<RequestDataType>;
 export default useNetworkRequest;
