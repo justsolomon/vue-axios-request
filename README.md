@@ -1,5 +1,11 @@
 # vue-axios-request
 
+[![npm version](https://img.shields.io/npm/v/vue-axios-request)](https://www.npmjs.com/package/vue-axios-request)
+[![npm bundle size](https://img.shields.io/bundlephobia/min/vue-axios-request)](https://www.npmjs.com/package/vue-axios-request)
+[![npm downloads](https://img.shields.io/npm/dm/vue-axios-request)](https://www.npmjs.com/package/vue-axios-request)
+[![GitHub top language](https://img.shields.io/github/languages/top/justsolomon/vue-axios-request)](https://github.com/justsolomon/vue-axios-request)
+[![GitHub](https://img.shields.io/github/license/justsolomon/vue-axios-request)](https://github.com/justsolomon/vue-axios-request/blob/main/LICENSE)
+
 Vue library for making network requests using axios.
 
 ## Features
