@@ -113,12 +113,12 @@ export default {
 </script>
 ```
 
-The `getInitialState` method takes in four parameters:
+The `getInitialState` method takes in four optional parameters:
 
 1. `data`, the key for the prop that will hold the request data,
 2. `loading`, the key for the prop to contain the loading status of the request,
 3. `error`, the key for the prop that will hold the request error,
-4. `isRequest`, an optional param that is defined when the `getInitialState` method is being used to fetch the initial state keys for the `useNetworkRequest` method.
+4. `isRequest`, a boolean that is defined when the `getInitialState` method is being used to fetch the initial state keys for the `useNetworkRequest` method.
 
 The method returns an object containing the keys passed in with their initial values, so they can be destructured in the `data` method of your Vue component.
 
