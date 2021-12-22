@@ -7,6 +7,6 @@ declare function useNetworkRequest<RequestDataType>(
   this: Record<string, any>,
   url: string,
   initialStateKeys: InitialStateKeys,
-  options: NetworkRequestOptions,
+  options?: NetworkRequestOptions,
 ): NetworkRequestType<RequestDataType>;
 export default useNetworkRequest;
