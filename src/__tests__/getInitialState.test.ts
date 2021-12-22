@@ -1,5 +1,5 @@
-import { InitialState } from "../src/types";
-import getInitialState from "../src/utils/getInitialState";
+import { InitialState } from "../types";
+import getInitialState from "../utils/getInitialState";
 
 describe("getInitialState", () => {
   it("should return correct initial state", () => {

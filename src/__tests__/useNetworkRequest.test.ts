@@ -1,6 +1,6 @@
-import { InitialState, InitialStateKeys } from "../src/types";
-import useNetworkRequest from "../src/useNetworkRequest";
-import getInitialState from "../src/utils/getInitialState";
+import { InitialState, InitialStateKeys } from "../types";
+import useNetworkRequest from "../useNetworkRequest";
+import getInitialState from "../utils/getInitialState";
 
 jest.setTimeout(30000);
 describe("useNetworkRequest", () => {
