@@ -4,7 +4,9 @@ const source = CancelToken.source();
 const axiosInstance = axios.create({
   cancelToken: source.token,
 });
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 function useNetworkRequest(url, initialStateKeys, options) {
+  if (!options) options = {};
   let { data } = initialStateKeys;
   const { loading, error } = initialStateKeys;
   let initialDataValue = null;
@@ -22,8 +24,8 @@ function useNetworkRequest(url, initialStateKeys, options) {
     this[loading] = false;
     if (error) this[error] = null;
   }
-  const reset = resetData.bind(this);
-  function cancel() {
+  function cancelRequest() {
+    this[loading] = false;
     source.cancel("Request cancelled.");
   }
   function axiosRequest(body, params) {
@@ -53,6 +55,8 @@ function useNetworkRequest(url, initialStateKeys, options) {
         if (errorHandler) errorHandler(axiosError);
       });
   }
+  const reset = resetData.bind(this);
+  const cancel = cancelRequest.bind(this);
   const dispatch = axiosRequest.bind(this);
   return { reset, cancel, dispatch };
 }
