@@ -1,6 +1,6 @@
 {
   "name": "vue-axios-request",
-  "version": "0.7.5",
+  "version": "1.0.0",
   "description": "Vue library for making network requests using Axios",
   "private": false,
   "author": "Gbolahan Balogun",
